@@ -3,7 +3,20 @@ package greetings
 import (
     "errors"
     "fmt"
+    "math/rand"
 )
+
+func Hellos(names []string) (map[string]string, error) {
+    messages := make(map[string]string)
+    for _, name := range names {
+        message, err := Hello(name)
+        if err != nil {
+            return nil, err
+        }
+        messages[name] = message
+    }
+    return messages, nil
+}
 
 // Hello returns a greeting for the named person.
 func Hello(name string) (string, error) {
@@ -14,6 +27,21 @@ func Hello(name string) (string, error) {
 
     // If a name was recieved, return a value that embeds the name
     // in a greeting message
-    message := fmt.Sprintf("Hi, %v. Welcome!", name)
+    message := fmt.Sprintf(randomFormat(), name)
     return message, nil
+}
+
+// randomFormat returns one of a set of greeting messages. The returned
+// message is selected at random.
+func randomFormat() string {
+    // a slice of message formats.
+    formats := []string{
+        "Hi, %v. Welcome!",
+        "Great to see you, %v!",
+        "Hail, %v! Well met!",
+    }
+
+    // Return a randomly selected format by specifying
+    // a random index for the slice of formats.
+    return formats[rand.Intn(len(formats))]
 }
